@@ -1,0 +1,1 @@
+const connectionString = 'mongodb+srv://abhiscience:<password>@abhinavcluster.b2daqtw.mongodb.net/abhiKart?retryWrites=true&w=majority'
