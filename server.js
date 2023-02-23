@@ -1,24 +1,43 @@
-import express from 'express'
+import express from 'express';
+import cors from 'cors';
 
-const app = express()
-import dotenv from 'dotenv'
-dotenv.config()
+const app = express();
+import dotenv from 'dotenv';
+dotenv.config();
+import 'express-async-errors'
 
-import connectDB from './db/connect.js'
+//db and authenticateuser
+import connectDB from './db/connect.js';
+
+// routers
+
+import authRouter from './routes/authRoutes.js';
+import jobsRouter from './routes/jobRoutes.js';
 
 
-import errorHandlerMiddleware from './middleware/error-handler.js'
-import notFoundMiddleware from './middleware/not-found.js'
+import errorHandlerMiddleware from './middleware/error-handler.js';
+import notFoundMiddleware from './middleware/not-found.js';
+// import authenticateUser from './middleware/auth.js';
+
+//since we have to post request as json
+
+app.use(cors());
+app.use(express.json());
+
+console.log("hello");
+console.log("hello");
 
 app.get('/',(req,res)=>{
-    throw new Error('error')
-    res.send('welcome!')
+    res.json({msg:'welcome!'})
 })
 
 //middleware
+app.use('/api/v1/auth',authRouter);
+app.use('/api/v1/jobs',jobsRouter);
+
 
 app.use(notFoundMiddleware);
-app.use(errorHandlerMiddleware)
+app.use(errorHandlerMiddleware);
 const port = process.env.PORT || 5000;
 
 
