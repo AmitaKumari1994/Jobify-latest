@@ -2,21 +2,22 @@ import React from 'react'
 import { useEffect } from 'react'
 
 const Dashboard = () => {
-  const fetchData = async ()=>{
+  // const fetchData = async ()=>{
 
-    try {
+  //   try {
       
-      const reponse = await fetch('http://localhost:5000/')
-      const data = await reponse.json();
-      console.log(data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  //     // const reponse = await fetch('/')
+  //     const reponse = await fetch('/api/v1')
+  //     const data = await reponse.json();
+  //     console.log(data)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
   
-  useEffect(()=>{
-    fetchData()
-  },[])
+  // useEffect(()=>{
+  //   fetchData()
+  // },[])
 
   return (
     <h1>Dashboard Page 1</h1>

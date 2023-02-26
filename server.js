@@ -1,5 +1,5 @@
 import express from 'express';
-import cors from 'cors';
+// import cors from 'cors';
 
 const app = express();
 import dotenv from 'dotenv';
@@ -21,7 +21,7 @@ import notFoundMiddleware from './middleware/not-found.js';
 
 //since we have to post request as json
 
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 
 console.log("hello");
@@ -29,6 +29,10 @@ console.log("hello");
 
 app.get('/',(req,res)=>{
     res.json({msg:'welcome!'})
+})
+
+app.get('/api/v1',(req,res)=>{
+    res.json({msg:'API'})
 })
 
 //middleware
