@@ -5,6 +5,7 @@ const app = express();
 import dotenv from 'dotenv';
 dotenv.config();
 import 'express-async-errors'
+import morgan from 'morgan'
 
 //db and authenticateuser
 import connectDB from './db/connect.js';
@@ -17,11 +18,14 @@ import jobsRouter from './routes/jobRoutes.js';
 
 import errorHandlerMiddleware from './middleware/error-handler.js';
 import notFoundMiddleware from './middleware/not-found.js';
-// import authenticateUser from './middleware/auth.js';
+import authenticateUser from './middleware/auth.js';
 
 //since we have to post request as json
 
 // app.use(cors());
+if(process.env.NODE_ENV !== 'production'){
+    app.use(morgan('dev'));
+}
 app.use(express.json());
 
 console.log("hello");
@@ -37,7 +41,7 @@ app.get('/api/v1',(req,res)=>{
 
 //middleware
 app.use('/api/v1/auth',authRouter);
-app.use('/api/v1/jobs',jobsRouter);
+app.use('/api/v1/jobs',authenticateUser,jobsRouter);
 
 
 app.use(notFoundMiddleware);
