@@ -18,8 +18,11 @@ const Addjob = () => {
     statusOptions,
     handleChange,
     clearValues,
-    createJob
+    createJob,
+    editJob,
+    setEditJob
   } = useAppContext()
+
 
 const handleSubmit = (e)=>{
   e.preventDefault()
@@ -30,7 +33,7 @@ const handleSubmit = (e)=>{
    }
 
 if(isEditing){
-  //eventually editjob()
+   editJob()
   return
 }  
   createJob()

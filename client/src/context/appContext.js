@@ -23,7 +23,12 @@ import { DISPLAY_ALERT ,
     CREATE_JOB_SUCCESS,
     CREATE_JOB_ERROR,
     GET_JOB_BEGIN,
-    GET_JOB_SUCCESS 
+    GET_JOB_SUCCESS,
+    SET_EDIT_JOB,
+    DELETE_JOB_BEGIN,
+    EDIT_JOB_BEGIN,
+    EDIT_JOB_SUCCESS,
+    EDIT_JOB_ERROR
      } from "./actions.js";
 
 
@@ -265,12 +270,45 @@ const getJobs = async ()=>{
 }
 
 const setEditJob = (id)=>{
-    console.log(`set edit job : ${id}`);
-}
+    dispatch({type: SET_EDIT_JOB, payload: {id}})
+};
 
-const deleteJob = (id)=>{
-    console.log(`delete job : ${id}`);
-}
+const editJob = async (jobId)=>{
+
+    dispatch({type:EDIT_JOB_BEGIN})
+
+    try {
+        const {position ,company, jobLocation,jobType,status} = state
+        await authFetch.patch(`/jobs/${state.editJobId}`,{
+            company,
+            position,
+            jobLocation,
+            jobType,
+            status
+        })
+        dispatch({type:EDIT_JOB_SUCCESS})
+        dispatch({type:CLEAR_VALUES})
+    } catch (error) {
+        if(error.response.status === 401) return
+        dispatch({
+            type:EDIT_JOB_ERROR,
+            payload:{msg:error.response.data.msg},
+        })
+    }
+
+    clearAlert()
+};
+
+ const deleteJob = async (jobId)=>{
+    dispatch({type:DELETE_JOB_BEGIN})
+    try {
+        await authFetch.delete(`/jobs/${jobId}`)
+        getJobs()
+    } catch (error) {
+        console.log(`delete job : ${jobId}`);
+    }
+     
+ };
     return (
         <AppContext.Provider value={{...state,
             displayAlert,
@@ -284,7 +322,11 @@ const deleteJob = (id)=>{
             createJob,
             getJobs,
             setEditJob,
-            deleteJob}}>{children}</AppContext.Provider>
+            editJob,
+            deleteJob
+            
+           
+        }}>{children}</AppContext.Provider>
     )
 }
 
