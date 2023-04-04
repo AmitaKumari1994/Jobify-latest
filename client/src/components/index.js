@@ -9,6 +9,11 @@ import SearchContainers from './SearchContainers.js';
 import JobsContainer from './JobsContainer.js';
 import JobInfo from './JobInfo.js';
 
+import ChartsContainer from './ChartsContainer.js';
+import Loading from './Loading.js';
+import StatsOfContainer from './StatsOfContainer.js';
+
+
 
 
 
@@ -22,4 +27,8 @@ export{
     FormRowSelect,
     JobsContainer,
     SearchContainers,
-    JobInfo}
+    JobInfo,
+    StatsOfContainer,
+    ChartsContainer,
+    Loading
+}
