@@ -1,5 +1,5 @@
 import React from "react";
-import { useReducer,useContext } from "react";
+import { useReducer,useContext,useEffect } from "react";
 import axios from 'axios';
 
 import reducer from "./reducer";
@@ -30,7 +30,8 @@ import { DISPLAY_ALERT ,
     EDIT_JOB_SUCCESS,
     EDIT_JOB_ERROR,
     SHOW_STATS_BEGIN,
-    SHOW_STATS_SUCCESS
+    SHOW_STATS_SUCCESS,
+    CLEAR_FILTERS
      } from "./actions.js";
 
 
@@ -40,7 +41,7 @@ import { DISPLAY_ALERT ,
 const token = localStorage.getItem('token')
 const user = localStorage.getItem('user');
 const userLocation = localStorage.getItem('location')
-const monthlyApplication = [];
+
 
 const initialState={
     isLoading: false,
@@ -65,10 +66,14 @@ const initialState={
     numOfPages : 1,
     page : 1,
     stats : {},
-    monthlyApplication : []
+    monthlyApplications: [],
+    search:'',
+    searchStatus: 'all',
+    searchType : 'all',
+    sort : 'latest',
+    sortOptions: ['oldest','latest','a-z','z-a']
 
-
-}
+};
 
 const AppContext = React.createContext()
 
@@ -254,7 +259,11 @@ const createJob = async ()=>{
 }
 
 const getJobs = async ()=>{
-    let url = '/jobs'
+    const {search , searchStatus,searchType,sort} = state
+    let url = `/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}`
+    if(search){
+        url = url + `&search=${search}`
+    }
 
     dispatch({type:GET_JOB_BEGIN})
     try {
@@ -319,11 +328,15 @@ const editJob = async (jobId)=>{
     dispatch({type:SHOW_STATS_BEGIN})
     try {
         const {data} = await authFetch('/jobs/stats')
-        dispatch({type:SHOW_STATS_SUCCESS,
+        
+
+        dispatch({
+        type:SHOW_STATS_SUCCESS,
         payload:{
             stats: data.defaultStats,
-            monthlyApplication: data.monthlyApplications,
+            monthlyApplications: data.monthlyApplications,
         },
+
     })
     } catch (error) {
         console.log(error.response)
@@ -331,6 +344,10 @@ const editJob = async (jobId)=>{
     }
 
     clearAlert()
+ }
+
+ const clearFilters =()=>{
+    dispatch({type:CLEAR_FILTERS})
  }
     return (
         <AppContext.Provider value={{...state,
@@ -347,7 +364,8 @@ const editJob = async (jobId)=>{
             setEditJob,
             editJob,
             deleteJob,
-            showStats
+            showStats,
+            clearFilters
             
            
         }}>{children}</AppContext.Provider>

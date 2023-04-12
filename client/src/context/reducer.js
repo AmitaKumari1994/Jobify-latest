@@ -25,7 +25,8 @@ import { DISPLAY_ALERT ,
         EDIT_JOB_SUCCESS,
         EDIT_JOB_ERROR,
         SHOW_STATS_BEGIN,
-        SHOW_STATS_SUCCESS
+        SHOW_STATS_SUCCESS,
+        CLEAR_FILTERS
     } from "./actions";
 
 import { initialState } from "./appContext";
@@ -243,7 +244,7 @@ const reducer = (state,action)=>{
             showAlert:true,
             alertType:`danger`,
             alertText:action.payload.msg
-        }
+        };
     }
 
     if(action.type === SHOW_STATS_BEGIN){
@@ -251,15 +252,25 @@ const reducer = (state,action)=>{
             ...state,
             isLoading:true,
             showAlert:false
-        }
+        };
     }
 
     if(action.type === SHOW_STATS_SUCCESS){
         return{
             ...state,
-            isLoading:true,
+            isLoading:false,
             stats:action.payload.stats,
-            monthlyApplication: action.payload.monthlyApplications
+            monthlyApplications: action.payload.monthlyApplications
+        };
+    }
+
+    if(action.type === CLEAR_FILTERS){
+        return{
+            ...state,
+            search:'',
+            searchStatus: 'all',
+            searchType : 'all',
+            sort : 'latest'
         }
     }
 
