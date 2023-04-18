@@ -1,5 +1,5 @@
 import React from "react";
-import { useReducer,useContext,useEffect } from "react";
+import { useReducer,useContext } from "react";
 import axios from 'axios';
 
 import reducer from "./reducer";
@@ -31,7 +31,8 @@ import { DISPLAY_ALERT ,
     EDIT_JOB_ERROR,
     SHOW_STATS_BEGIN,
     SHOW_STATS_SUCCESS,
-    CLEAR_FILTERS
+    CLEAR_FILTERS,
+    CHANGE_PAGE
      } from "./actions.js";
 
 
@@ -259,8 +260,8 @@ const createJob = async ()=>{
 }
 
 const getJobs = async ()=>{
-    const {search , searchStatus,searchType,sort} = state
-    let url = `/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}`
+    const {page,search , searchStatus,searchType,sort} = state
+    let url = `/jobs?page=${page}status=${searchStatus}&jobType=${searchType}&sort=${sort}`
     if(search){
         url = url + `&search=${search}`
     }
@@ -278,7 +279,7 @@ const getJobs = async ()=>{
         }}
         )
     } catch (error) {
-        console.log(error.response)
+        logoutUser()
     }
     clearAlert()
 }
@@ -319,7 +320,7 @@ const editJob = async (jobId)=>{
         await authFetch.delete(`/jobs/${jobId}`)
         getJobs()
     } catch (error) {
-        console.log(`delete job : ${jobId}`);
+        logoutUser()
     }
      
  };
@@ -339,8 +340,7 @@ const editJob = async (jobId)=>{
 
     })
     } catch (error) {
-        console.log(error.response)
-        //logoutUser
+        logoutUser()
     }
 
     clearAlert()
@@ -348,6 +348,10 @@ const editJob = async (jobId)=>{
 
  const clearFilters =()=>{
     dispatch({type:CLEAR_FILTERS})
+ }
+
+ const changePage = (page)=>{
+    dispatch({type:CHANGE_PAGE ,payload: {page}})
  }
     return (
         <AppContext.Provider value={{...state,
@@ -365,7 +369,9 @@ const editJob = async (jobId)=>{
             editJob,
             deleteJob,
             showStats,
-            clearFilters
+            clearFilters,
+            changePage
+
             
            
         }}>{children}</AppContext.Provider>

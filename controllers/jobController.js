@@ -122,7 +122,7 @@ const getAllJob = async (req,res)=>{
      const numOfPages = Math.ceil(totalJobs/limit)
     res
         .status(StatusCodes.OK)
-        .json({jobs,totalJobs, numofPages})
+        .json({jobs,totalJobs, numOfPages})
 }
 
 const showStats = async (req,res)=>{
